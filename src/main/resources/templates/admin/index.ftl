@@ -77,6 +77,52 @@
                          </@shiro.hasPermission>
                         </ul>
                     </li>
+                    
+                    <li>
+                        <a href="#">
+                            <i class="fa fa fa-cog"></i>
+                            <span class="nav-label">文案管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                         <@shiro.hasPermission name="system:user:index">
+                            <li>
+                               <a class="J_menuItem" href="${ctx!}/admin/user/index">须知管理</a>
+                            </li>
+                         </@shiro.hasPermission>
+                         <@shiro.hasPermission name="system:role:index">
+                            <li>
+                                <a class="J_menuItem" href="${ctx!}/admin/role/index">科目1&4列表</a>
+                            </li>
+                         </@shiro.hasPermission>
+                         <@shiro.hasPermission name="system:resource:index">
+                            <li>
+                                <a class="J_menuItem" href="${ctx!}/admin/resource/index">科目2列表</a>
+                            </li>
+                         </@shiro.hasPermission>
+                         <@shiro.hasPermission name="system:resource:index">
+                            <li>
+                                <a class="J_menuItem" href="${ctx!}/admin/resource/index">科目3列表</a>
+                            </li>
+                         </@shiro.hasPermission>
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <a href="#">
+                            <i class="fa fa fa-cog"></i>
+                            <span class="nav-label">Banner管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                         <@shiro.hasPermission name="system:user:index">
+                            <li>
+                               <a class="J_menuItem" href="${ctx!}/admin/banner/index">Banner列表</a>
+                            </li>
+                         </@shiro.hasPermission>
+                        </ul>
+                    </li>
+                    
                     <li class="line dk"></li>
                 </ul>
             </div>

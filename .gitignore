@@ -1,0 +1,35 @@
+*.class
+.tern-project
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Intellij project files
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Eclipse project files 
+/.settings/
+.classpath
+.project
+
+#target files
+/target/
+
+#mac file
+.DS_STORE
+/bin/
+
+#Project log files
+/logs/
+*.log
+
+#tomcat files
+catalina.base_IS_UNDEFINED/
+
+#upload dir
+/src/main/webapp/upload/
