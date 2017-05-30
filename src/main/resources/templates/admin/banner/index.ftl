@@ -37,7 +37,7 @@
 		                            <h4 class="example-title">工具条</h4>
 		                            <div class="example">
 		                                <div class="bootstrap-table"><div class="fixed-table-toolbar"><div class="bars pull-left"><div class="btn-group hidden-xs" id="exampleToolbar" role="group">
-		                                	<@shiro.hasPermission name="system:user:add">
+		                                	<@shiro.hasPermission name="banner:add">
 				                        		<button class="btn btn-outline btn-default" type="button" onclick="add();"><i class="glyphicon glyphicon-plus" aria-hidden="true"></i>&nbsp;添加</button>
 				                        	</@shiro.hasPermission>
 		                                    <button type="button" class="btn btn-outline btn-danger">

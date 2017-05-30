@@ -26,4 +26,11 @@ public class IndexController extends BaseController{
 		logger.debug(users.toString());
 		return "index";
 	}
+	
+	@RequestMapping(value={"/previlige/no"})
+	public String previligeNo() {
+		logger.error("没有权限");
+		return "index";
+	}
+	
 }

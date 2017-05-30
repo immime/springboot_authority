@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wyjk.admin.dao.IResourceDao;
 import com.wyjk.admin.dao.support.IBaseDao;
@@ -72,7 +73,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, Integer>
 	}
 
 	@Override
-	@CacheEvict(value = "resourceCache")
 	public void saveOrUpdate(Resource resource) {
 		if(resource.getId() != null){
 			Resource dbResource = find(resource.getId());

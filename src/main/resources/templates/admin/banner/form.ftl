@@ -17,7 +17,12 @@
     <link href="${ctx!}/assets/css/animate.css" rel="stylesheet">
     <link href="${ctx!}/assets/css/style.css?v=4.1.0" rel="stylesheet">
     <link href="${ctx!}/assets/js/plugins/dropzone/min/dropzone.min.css" rel="stylesheet">
-
+	
+	<style>
+	  .dz-max-files-reached {
+	  	background-color: red
+	  };
+	</style>
 </head>
 
 <body class="gray-bg">
@@ -47,7 +52,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">跳转链接：</label>
                                 <div class="col-sm-8">
-                                    <input id="targetUrl" name="targetUrl" class="form-control" type="text" value="${banner.targetUrl}" <#if banner?exists> readonly="readonly"</#if> >
+                                    <input id="targetUrl" name="targetUrl" class="form-control" type="text" value="${banner.targetUrl}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -59,6 +64,7 @@
                             <div class="form-group">
                                 <div class="col-sm-8 col-sm-offset-3">
                                     <button class="btn btn-primary" type="submit">提交</button>
+                                    <button class="btn" type="button" onclick="javascript:history.go(-1);">返回</button>
                                 </div>
                             </div>
                         </form>
@@ -90,10 +96,14 @@
     $(document).ready(function () {
     
     	var itemId = $("#id").val();
-    
+    	
+    	Dropzone.options.myDropzone = false;
 	    Dropzone.autoDiscover = false;
         var myDropzone = new Dropzone("#myDropzone", {
-          url: "/admin/UploadCtrl/banner",
+          url: "/admin/file/uploadBanner",
+          paramName: "file", // The name that will be used to transfer the file
+  		  maxFilesize: 2, // MB
+  		  maxFiles: 1,
           addRemoveLinks: true,
           method: 'post',
           filesizeBase: 1024,
@@ -101,14 +111,20 @@
             formData.append("filesize", file.size);
           },
           success: function (file, response, e) {
-        	if (response && response.statusCode === 1) {
-        		$("#iconUrl").val(response.content);
+        	if (response && response.code === 0) {
+        		$("#iconUrl").val(response.data);
         	}
         	else {
               $(file.previewTemplate).children('.dz-error-mark').css('opacity', '1')
             }
-          },
+          }
         });
+        
+        myDropzone.on("maxfilesexceeded", function(file)
+		{
+		    this.removeFile(file);
+		    alert("No more files please!");
+		});
         
         if (itemId) {
         	var dbIconUrl = "${fileDomain}" + $("#iconUrl").val();

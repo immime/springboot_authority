@@ -2,6 +2,7 @@ package com.wyjk.admin.controller.admin;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wyjk.admin.common.JsonResult;
 import com.wyjk.admin.controller.BaseController;
 import com.wyjk.admin.entity.Banner;
-import com.wyjk.admin.entity.User;
 import com.wyjk.admin.service.IBannerService;
 import com.wyjk.admin.service.specification.SimpleSpecificationBuilder;
 import com.wyjk.admin.service.specification.SpecificationOperator.Operator;
@@ -21,6 +21,9 @@ import com.wyjk.admin.service.specification.SpecificationOperator.Operator;
 @Controller
 @RequestMapping("/admin/banner")
 public class BannerController extends BaseController {
+	
+	@Value("${app.upload.fileDomain}")
+	private String fileDomain;
 	@Autowired
 	private IBannerService service;
 	
@@ -50,6 +53,7 @@ public class BannerController extends BaseController {
 	public String edit(@PathVariable Integer id, ModelMap map) {
 		Banner banner = service.find(id);
 		map.put("banner", banner);
+		map.put("fileDomain", fileDomain);
 		return "admin/banner/form";
 	}
 	
