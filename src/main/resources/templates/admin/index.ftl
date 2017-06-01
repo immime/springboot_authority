@@ -87,7 +87,7 @@
                         <ul class="nav nav-second-level">
                          <@shiro.hasPermission name="system:user:index">
                             <li>
-                               <a class="J_menuItem" href="${ctx!}/admin/user/index">须知管理</a>
+                               <a class="J_menuItem" href="${ctx!}/admin/notice/index">须知管理</a>
                             </li>
                          </@shiro.hasPermission>
                          <@shiro.hasPermission name="system:role:index">
