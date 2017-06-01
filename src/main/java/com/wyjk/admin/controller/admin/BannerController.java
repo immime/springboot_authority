@@ -1,22 +1,20 @@
 package com.wyjk.admin.controller.admin;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wyjk.admin.common.JsonResult;
+import com.wyjk.admin.common.pagination.PageResult;
 import com.wyjk.admin.controller.BaseController;
 import com.wyjk.admin.entity.Banner;
 import com.wyjk.admin.service.IBannerService;
-import com.wyjk.admin.service.specification.SimpleSpecificationBuilder;
-import com.wyjk.admin.service.specification.SpecificationOperator.Operator;
 
 @Controller
 @RequestMapping("/admin/banner")
@@ -34,13 +32,11 @@ public class BannerController extends BaseController {
 	
 	@RequestMapping(value = { "/list" })
 	@ResponseBody
-	public Page<Banner> list() {
-		SimpleSpecificationBuilder<Banner> builder = new SimpleSpecificationBuilder<Banner>();
-		String searchText = request.getParameter("searchText");
-		if(StringUtils.isNotBlank(searchText)){
-			builder.add("nickName", Operator.likeAll.name(), searchText);
-		}
-		Page<Banner> page = service.findAll(builder.generateSpecification(), getPageRequest());
+	public PageResult<Banner> list(
+			Integer pageNumber,
+            Integer pageSize,
+            String searchText) {
+		PageResult<Banner> page = service.findAll(pageNumber, pageSize, searchText);
 		return page;
 	}
 	
@@ -77,6 +73,16 @@ public class BannerController extends BaseController {
 			e.printStackTrace();
 			return JsonResult.failure(e.getMessage());
 		}
+		return JsonResult.success();
+	}
+	
+	@RequestMapping(value = "/updateOrder", method = RequestMethod.POST)
+	@ResponseBody
+	public JsonResult updateOrder(
+			@RequestParam(name="id") Integer id,
+			@RequestParam(name="upOrDown") String upOrDown 
+		) throws Exception {
+		service.updateOrder(id, upOrDown);
 		return JsonResult.success();
 	}
 	

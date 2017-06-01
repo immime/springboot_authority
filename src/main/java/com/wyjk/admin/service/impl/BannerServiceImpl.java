@@ -1,20 +1,16 @@
 package com.wyjk.admin.service.impl;
 
-import java.util.Date;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wyjk.admin.common.utils.MD5Utils;
+import com.wyjk.admin.common.pagination.PageResult;
 import com.wyjk.admin.dao.IBannerDao;
-import com.wyjk.admin.dao.support.IBaseDao;
 import com.wyjk.admin.entity.Banner;
-import com.wyjk.admin.entity.User;
 import com.wyjk.admin.service.IBannerService;
-import com.wyjk.admin.service.support.impl.BaseServiceImpl;
 
 @Service
-public class BannerServiceImpl extends BaseServiceImpl<Banner, Integer> implements IBannerService {
+public class BannerServiceImpl implements IBannerService {
 
 	@Autowired
 	private IBannerDao dao;
@@ -22,20 +18,61 @@ public class BannerServiceImpl extends BaseServiceImpl<Banner, Integer> implemen
 	@Override
 	public void saveOrUpdate(Banner banner) {
 		if (banner.getId() != null) {
-			Banner db = find(banner.getId());
+			Banner db = dao.find(banner.getId());
 			db.setIconUrl(banner.getIconUrl());
 			db.setTargetUrl(banner.getTargetUrl());
 			db.setSortOrder(banner.getSortOrder());
-			update(db);
+			dao.update(db);
 		} else {
 			banner.setStatus(1);
-			save(banner);
+			dao.save(banner);
 		}
 	}
 
 	@Override
-	public IBaseDao<Banner, Integer> getBaseDao() {
-		return this.dao;
+	public void updateOrder(Integer id, String upOrDown) {
+		Banner src = dao.find(id);
+		if (src == null) {
+			return;
+		}
+		if (StringUtils.isEmpty(upOrDown)) {
+			return;
+		}
+		Banner target = null;
+		Integer sortOrder = src.getSortOrder();
+		if (upOrDown.equalsIgnoreCase("down")) {
+			target = dao.findNextByOrder(sortOrder);
+		}
+		if (upOrDown.equalsIgnoreCase("up")) {
+			target = dao.findLastByOrder(sortOrder);
+		}
+		if (target == null) {
+			return;
+		}
+		Integer srcOrder = src.getSortOrder();
+		Integer targetOrder = target.getSortOrder();
+		
+		src.setSortOrder(targetOrder);
+		target.setSortOrder(srcOrder);
+		
+//		dao.update(src);
+//		dao.update(target);
+		
+	}
+
+	@Override
+	public Banner find(Integer id) {
+		return dao.find(id);
+	}
+
+	@Override
+	public void delete(Integer id) {
+		dao.delete(id);
+	}
+
+	@Override
+	public PageResult<Banner> findAll(Integer pageNumber, Integer pageSize, String searchText) {
+		return dao.findPage(pageNumber, pageSize, searchText);
 	}
 
 }

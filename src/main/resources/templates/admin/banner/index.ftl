@@ -19,7 +19,12 @@
 
     <link href="${ctx!}/assets/css/animate.css" rel="stylesheet">
     <link href="${ctx!}/assets/css/style.css?v=4.1.0" rel="stylesheet">
-
+	
+	<style>
+		.img-col {
+			height: 24px;
+		}
+	</style>
 </head>
 
 <body class="gray-bg">
@@ -46,19 +51,9 @@
 		                                </div>
 		                              </div>
 		                              <div class="columns columns-right btn-group pull-right">
-		                              	<button class="btn btn-default btn-outline" type="button" name="refresh" title="刷新"><i class="glyphicon glyphicon-repeat"></i></button>
-		                              	<button class="btn btn-default btn-outline" type="button" name="toggle" title="切换"><i class="glyphicon glyphicon-list-alt"></i></button>
-		                              	<div class="keep-open btn-group" title="列">
-		                              		<button type="button" class="btn btn-default btn-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-		                              			<i class="glyphicon glyphicon-list"></i><span class="caret"></span>
-		                              		</button>
-		                              		<ul class="dropdown-menu" role="menu">
-			                              		<li><label><input type="checkbox" data-field="iconUrl" value="0" checked="checked"> iconUrl</label></li>
-			                              		<li><label><input type="checkbox" data-field="targetUrl" value="1" checked="checked"> targetUrl</label></li>
-		                              		</ul>
-		                              	</div>
+		                              	<button class="btn btn-default btn-outline" type="button" name="search" title="搜索" onclick="search();">搜索</button>
 		                              </div>
-		                              <div class="pull-right search"><input class="form-control input-outline" type="text" placeholder="搜索"></div>
+		                              <div class="pull-right search"><input id="searchText" class="form-control input-outline" type="text" placeholder="链接"></div>
 		                              </div>
 		                              	
 		                              	<div class="fixed-table-container" style="padding-bottom: 0px;"><div class="fixed-table-header" style="display: none;"><table></table></div><div class="fixed-table-body"><div class="fixed-table-loading" style="top: 37px; display: none;">正在努力地加载数据中，请稍候……</div>
@@ -96,6 +91,10 @@
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function () {
+			initTable();
+        });
+        
+        function initTable() {
         	//初始化表格,动态从服务器加载数据  
 			$("#table_list").bootstrapTable({
 			    //使用get请求到服务器获取数据  
@@ -119,11 +118,18 @@
 			    //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder  
 			    //设置为limit可以获取limit, offset, search, sort, order  
 			    queryParamsType: "undefined",
+			    queryParams: function queryParams(params) {   //设置查询参数  
+	              var param = {    
+	                  pageNumber: params.pageNumber,
+	                  pageSize: params.pageSize
+	              };    
+	              return param;                   
+	            },  
 			    //json数据解析
 			    responseHandler: function(res) {
 			        return {
-			            "rows": res.content,
-			            "total": res.totalElements
+			            "rows": res.list,
+			            "total": res.total
 			        };
 			    },
 			    //数据列
@@ -142,7 +148,7 @@
 			        field: "iconUrl",
 			        formatter: function(value, row, index) {
                     	var r = "";
-                    	return value;
+                    	return "<a class='img-view'><img class='img-col' src='${fileDomain}"+ value+"'></a>";
                     }
 			    },{
 			        title: "URL",
@@ -151,14 +157,15 @@
 			        title: "操作",
 			        field: "empty",
                     formatter: function (value, row, index) {
-                    	var operateHtml = '<@shiro.hasPermission name="system:user:edit"><button class="btn btn-primary btn-xs" type="button" onclick="edit(\''+row.id+'\')"><i class="fa fa-edit"></i>&nbsp;修改</button> &nbsp;</@shiro.hasPermission>';
-                    	operateHtml = operateHtml + '<@shiro.hasPermission name="system:user:deleteBatch"><button class="btn btn-danger btn-xs" type="button" onclick="del(\''+row.id+'\')"><i class="fa fa-remove"></i>&nbsp;删除</button> &nbsp;</@shiro.hasPermission>';
-                    	operateHtml = operateHtml + '<@shiro.hasPermission name="system:user:grant"><button class="btn btn-info btn-xs" type="button" onclick="grant(\''+row.id+'\')"><i class="fa fa-arrows"></i>&nbsp;关联角色</button></@shiro.hasPermission>';
+                    	var operateHtml = '<@shiro.hasPermission name="banner:edit"><button class="btn btn-primary btn-xs" type="button" onclick="edit(\''+row.id+'\')"><i class="fa fa-edit"></i>&nbsp;修改</button> &nbsp;</@shiro.hasPermission>';
+                    	operateHtml = operateHtml + '<@shiro.hasPermission name="banner:deleteBatch"><button class="btn btn-danger btn-xs" type="button" onclick="del(\''+row.id+'\')"><i class="fa fa-remove"></i>&nbsp;删除</button> &nbsp;</@shiro.hasPermission>';
+                    	operateHtml = operateHtml + '<@shiro.hasPermission name="banner:updateOrder"><button class="btn btn-info btn-xs" type="button" onclick="updateSort(\''+row.id+'\', \'up\')"><i class="glyphicon glyphicon-arrow-up"></i></button></@shiro.hasPermission>';
+                    	operateHtml = operateHtml + '<@shiro.hasPermission name="banner:updateOrder"><button class="btn btn-info btn-xs" type="button" onclick="updateSort(\''+row.id+'\', \'down\')"><i class="glyphicon glyphicon-arrow-down"></i></button></@shiro.hasPermission>';
                         return operateHtml;
                     }
 			    }]
 			});
-        });
+        }
         
         function edit(id){
         	location.href = '${ctx!}/admin/banner/edit/' + id;
@@ -166,18 +173,23 @@
         function add(){
         	location.href = '${ctx!}/admin/banner/add';
         }
-        function grant(id){
-        	layer.open({
-        	      type: 2,
-        	      title: '关联角色',
-        	      shadeClose: true,
-        	      shade: false,
-        	      area: ['893px', '600px'],
-        	      content: '${ctx!}/admin/user/grant/'  + id,
-        	      end: function(index){
-        	    	  $('#table_list').bootstrapTable("refresh");
-       	    	  }
-        	    });
+        function updateSort(id, upOrDown) {
+        	console.log(id, upOrDown);
+        	$.ajax({
+	    		   type: "POST",
+	    		   dataType: "json",
+	    		   data: {
+	    		     "id": id,
+	    		     "upOrDown": upOrDown
+	    		   },
+	    		   url: "${ctx!}/admin/banner/updateOrder",
+	    		   success: function(msg){
+ 	   	    			layer.msg(msg.message, {time: 2000},function(){
+ 	   	    				$('#table_list').bootstrapTable("refresh");
+ 	   					});
+	    		   }
+	    	});
+        	$('#table_list').bootstrapTable("refresh");
         }
         function del(id){
         	layer.confirm('确定删除吗?', {icon: 3, title:'提示'}, function(index){
@@ -193,6 +205,15 @@
     	    		   }
     	    	});
        		});
+        }
+        
+        function search() {
+        	$("#table_list").bootstrapTable("refresh", {
+        		query: {
+        			pageNumber: 1,
+	                searchText: $("#searchText").val()
+        		}
+        	});
         }
         
     </script>

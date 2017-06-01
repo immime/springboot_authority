@@ -16,7 +16,9 @@
     <link href="${ctx!}/assets/css/font-awesome.css?v=4.4.0" rel="stylesheet">
     <link href="${ctx!}/assets/css/animate.css" rel="stylesheet">
     <link href="${ctx!}/assets/css/style.css?v=4.1.0" rel="stylesheet">
-    <link href="${ctx!}/assets/js/plugins/dropzone/min/dropzone.min.css" rel="stylesheet">
+	
+	<link href="${ctx!}/assets/js/plugins/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+	<link href="${ctx!}/assets/js/plugins/bootstrap-fileinput/themes/explorer/theme.min.css" rel="stylesheet">
 	
 	<style>
 	  .dz-max-files-reached {
@@ -39,14 +41,10 @@
                         	
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">图片:</label>
-                                <input type="hidden" id="iconUrl" name="iconUrl" value="${banner.iconUrl}">
                                 <div class="col-sm-8">
-	                                <div class="dropzone" id="myDropzone">
-									  <div class="am-text-success dz-message">
-									    将文件拖拽到此处<br>或点此打开文件管理器选择文件
-									  </div>
-									</div>
-								</div>
+                                	<input type="hidden" id="iconUrl" name="iconUrl" value="${banner.iconUrl}">
+                                	<input id="fileInput" name="file" type="file" multiple class="file-loading" accept="image">
+                                </div>
                             </div>
 							
                             <div class="form-group">
@@ -88,55 +86,58 @@
     <script src="${ctx!}/assets/js/plugins/validate/messages_zh.min.js"></script>
     <script src="${ctx!}/assets/js/plugins/layer/layer.min.js"></script>
     
-    <!-- dropzone -->
-    <script src="${ctx!}/assets/js/plugins/dropzone/min/dropzone.min.js"></script>
+    <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/js/fileinput.min.js"></script>
+    <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/themes/explorer/theme.min.js"></script>
+    <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/js/locales/zh.js"></script>
     
     <script type="text/javascript">
+    
+    var fileInputOptions = {
+		theme: "explorer",
+	    language : 'zh',
+	    uploadUrl: "/admin/file/uploadBanner",
+	    maxFileCount: 1,
+	    allowedFileExtensions: ['jpg', 'png', 'gif'],
+	    showBrowse: false,
+		browseOnZoneClick: true,
+	    overwriteInitial: false,
+	    initialPreviewAsData: true
+    };
     
     $(document).ready(function () {
     
     	var itemId = $("#id").val();
     	
-    	Dropzone.options.myDropzone = false;
-	    Dropzone.autoDiscover = false;
-        var myDropzone = new Dropzone("#myDropzone", {
-          url: "/admin/file/uploadBanner",
-          paramName: "file", // The name that will be used to transfer the file
-  		  maxFilesize: 2, // MB
-  		  maxFiles: 1,
-          addRemoveLinks: true,
-          method: 'post',
-          filesizeBase: 1024,
-          sending: function(file, xhr, formData) {
-            formData.append("filesize", file.size);
-          },
-          success: function (file, response, e) {
-        	if (response && response.code === 0) {
-        		$("#iconUrl").val(response.data);
-        	}
-        	else {
-              $(file.previewTemplate).children('.dz-error-mark').css('opacity', '1')
-            }
-          }
-        });
+    	var iconUrl = $("#iconUrl").val();
+    	var dbIconUrl = "${fileDomain}" + $("#iconUrl").val();
+    	if (iconUrl) {
+    		var extOpitions = $.extend({
+	            initialPreview: [dbIconUrl]
+	        }, fileInputOptions);
+    	
+    		$("#fileInput").fileinput(extOpitions).on("filebatchselected", function(event, files) {
+	            $(this).fileinput("upload");
+	        }).on('fileuploaded', function(event, data) {
+	        	console.log(JSON.stringify(data));
+		        if(data.response) {
+	        		$("#iconUrl").val(data.response.data);
+	        	} else {
+	        		console.error("上传失败");
+	        	}
+		    });
+    	} else {
+	    	$("#fileInput").fileinput(fileInputOptions).on("filebatchselected", function(event, files) {
+	            $(this).fileinput("upload");
+	        }).on('fileuploaded', function(event, data) {
+	        	console.log(JSON.stringify(data));
+	        	if(data.response) {
+	        		$("#iconUrl").val(data.response.data);
+	        	} else {
+	        		console.error("上传失败");
+	        	}
+		    });
+    	}
         
-        myDropzone.on("maxfilesexceeded", function(file)
-		{
-		    this.removeFile(file);
-		    alert("No more files please!");
-		});
-        
-        if (itemId) {
-        	var dbIconUrl = "${fileDomain}" + $("#iconUrl").val();
-        	if (dbIconUrl && dbIconUrl !=='') {
-        		// Create the mock file:
-                var mockFile = { name: "Filename", size: 12345 };
-             	// And optionally show the thumbnail of the file:
-             	myDropzone.emit("addedfile", mockFile);
-                myDropzone.emit("thumbnail", mockFile, dbIconUrl);
-        	}
-        }
-	  	
 	    $("#frm").validate({
     	    rules: {
     	    	targetUrl: {
@@ -154,8 +155,7 @@
    	    		   data: $(form).serialize(),
    	    		   success: function(msg){
 	   	    			layer.msg(msg.message, {time: 2000},function(){
-	   						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-	   						parent.layer.close(index); 
+	   						history.go(-1);
 	   					});
    	    		   }
    	    		});
