@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit">
 
-    <title> SPPanAdmin- 主页</title>
+    <title> WyjkAdmin- 主页</title>
 
     <meta name="keywords" content="">
     <meta name="description" content="">
@@ -36,13 +36,12 @@
                                 <span class="clear">
                                     <span class="block m-t-xs" style="font-size:20px;">
                                         <i class="fa fa-area-chart"></i>
-                                        <strong class="font-bold">SPPanAdmin</strong>
+                                        <strong class="font-bold">WyjkAdmin</strong>
                                     </span>
                                 </span>
                             </a>
                         </div>
-                        <div class="logo-element">SPPanAdmin
-                        </div>
+                        <div class="logo-element">Wyjk</div>
                     </li>
                     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                         <span class="ng-scope">分类</span>
@@ -85,12 +84,12 @@
                             <span class="fa arrow"></span>
                         </a>
                         <ul class="nav nav-second-level">
-                         <@shiro.hasPermission name="system:user:index">
+                         <@shiro.hasPermission name="system:notice:index">
                             <li>
                                <a class="J_menuItem" href="${ctx!}/admin/notice/index">须知管理</a>
                             </li>
                          </@shiro.hasPermission>
-                         <@shiro.hasPermission name="system:role:index">
+                         <@shiro.hasPermission name="system:secret:index">
                             <li>
                                 <a class="J_menuItem" href="${ctx!}/admin/secret/index">秘籍管理</a>
                             </li>

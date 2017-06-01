@@ -42,7 +42,7 @@
 		                            <h4 class="example-title">工具条</h4>
 		                            <div class="example">
 		                                <div class="bootstrap-table"><div class="fixed-table-toolbar"><div class="bars pull-left"><div class="btn-group hidden-xs" id="exampleToolbar" role="group">
-		                                	<@shiro.hasPermission name="content:notice:add">
+		                                	<@shiro.hasPermission name="content:secret:add">
 				                        		<button class="btn btn-outline btn-default" type="button" onclick="add();"><i class="glyphicon glyphicon-plus" aria-hidden="true"></i>&nbsp;添加</button>
 				                        	</@shiro.hasPermission>
 		                                    <button type="button" class="btn btn-outline btn-danger">
@@ -102,7 +102,7 @@
 			    //必须设置，不然request.getParameter获取不到请求参数
 			    contentType: "application/x-www-form-urlencoded",
 			    //获取数据的Servlet地址  
-			    url: "${ctx!}/admin/notice/list",
+			    url: "${ctx!}/admin/secret/list",
 			    //表格显示条纹  
 			    striped: true,
 			    //启动分页  
@@ -144,23 +144,16 @@
 			        field: "id",
 			        sortable: true
 			    },{
-			        title: "图片",
-			        field: "iconUrl",
-			        formatter: function(value, row, index) {
-                    	var r = "";
-                    	return "<a class='img-view'><img class='img-col' src='${fileDomain}"+ value+"'></a>";
-                    }
-			    },{
 			        title: "标题",
 			        field: "title"
 			    },{
 			        title: "操作",
 			        field: "empty",
                     formatter: function (value, row, index) {
-                    	var operateHtml = '<@shiro.hasPermission name="content:notice:edit"><button class="btn btn-primary btn-xs" type="button" onclick="edit(\''+row.id+'\')"><i class="fa fa-edit"></i>&nbsp;修改</button> &nbsp;</@shiro.hasPermission>';
-                    	operateHtml = operateHtml + '<@shiro.hasPermission name="content:notice:deleteBatch"><button class="btn btn-danger btn-xs" type="button" onclick="del(\''+row.id+'\')"><i class="fa fa-remove"></i>&nbsp;删除</button> &nbsp;</@shiro.hasPermission>';
-                    	operateHtml = operateHtml + '<@shiro.hasPermission name="content:notice:updateOrder"><button class="btn btn-info btn-xs" type="button" onclick="updateSort(\''+row.id+'\', \'up\')"><i class="glyphicon glyphicon-arrow-up"></i></button></@shiro.hasPermission>';
-                    	operateHtml = operateHtml + '<@shiro.hasPermission name="content:notice:updateOrder"><button class="btn btn-info btn-xs" type="button" onclick="updateSort(\''+row.id+'\', \'down\')"><i class="glyphicon glyphicon-arrow-down"></i></button></@shiro.hasPermission>';
+                    	var operateHtml = '<@shiro.hasPermission name="content:secret:edit"><button class="btn btn-primary btn-xs" type="button" onclick="edit(\''+row.id+'\')"><i class="fa fa-edit"></i>&nbsp;修改</button> &nbsp;</@shiro.hasPermission>';
+                    	operateHtml = operateHtml + '<@shiro.hasPermission name="content:secret:deleteBatch"><button class="btn btn-danger btn-xs" type="button" onclick="del(\''+row.id+'\')"><i class="fa fa-remove"></i>&nbsp;删除</button> &nbsp;</@shiro.hasPermission>';
+                    	operateHtml = operateHtml + '<@shiro.hasPermission name="content:secret:updateOrder"><button class="btn btn-info btn-xs" type="button" onclick="updateSort(\''+row.id+'\', \'up\')"><i class="glyphicon glyphicon-arrow-up"></i></button></@shiro.hasPermission>';
+                    	operateHtml = operateHtml + '<@shiro.hasPermission name="content:secret:updateOrder"><button class="btn btn-info btn-xs" type="button" onclick="updateSort(\''+row.id+'\', \'down\')"><i class="glyphicon glyphicon-arrow-down"></i></button></@shiro.hasPermission>';
                         return operateHtml;
                     }
 			    }]
@@ -168,10 +161,10 @@
         }
         
         function edit(id){
-        	location.href = '${ctx!}/admin/notice/edit/' + id;
+        	location.href = '${ctx!}/admin/secret/edit/' + id;
         }
         function add(){
-        	location.href = '${ctx!}/admin/notice/add';
+        	location.href = '${ctx!}/admin/secret/add';
         }
         function updateSort(id, upOrDown) {
         	console.log(id, upOrDown);
@@ -182,7 +175,7 @@
 	    		     "id": id,
 	    		     "upOrDown": upOrDown
 	    		   },
-	    		   url: "${ctx!}/admin/notice/updateOrder",
+	    		   url: "${ctx!}/admin/secret/updateOrder",
 	    		   success: function(msg){
  	   	    			layer.msg(msg.message, {time: 2000},function(){
  	   	    				$('#table_list').bootstrapTable("refresh");
@@ -196,7 +189,7 @@
         		$.ajax({
     	    		   type: "POST",
     	    		   dataType: "json",
-    	    		   url: "${ctx!}/admin/notice/delete/" + id,
+    	    		   url: "${ctx!}/admin/secret/delete/" + id,
     	    		   success: function(msg){
 	 	   	    			layer.msg(msg.message, {time: 2000},function(){
 	 	   	    				$('#table_list').bootstrapTable("refresh");

@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wyjk.admin.common.pagination.PageResult;
 import com.wyjk.admin.dao.IKnowledgeDao;
 import com.wyjk.admin.dao.INoticeDao;
-import com.wyjk.admin.entity.Banner;
 import com.wyjk.admin.entity.Knowledge;
 import com.wyjk.admin.service.INoticeService;
 import com.wyjk.admin.vo.NoticeVO;
@@ -42,9 +41,11 @@ public class NoticeServiceImpl implements INoticeService {
 			knowledgeDao.update(db);
 		} else {
 			Knowledge knowledge = new Knowledge();
+			knowledge.setCategoryId(1); // 须知的栏目id
 			knowledge.setContent(entity.getContent());
 			knowledge.setIconUrl(entity.getIconUrl());
 			knowledge.setTitle(entity.getTitle());
+			knowledge.setStatus(1);
 			knowledgeDao.add(knowledge);
 		}
 	}
@@ -52,7 +53,7 @@ public class NoticeServiceImpl implements INoticeService {
 	@Transactional
 	@Override
 	public void delete(Integer id) {
-		knowledgeDao.delete(id);
+		knowledgeDao.updateStatus(id, 0);
 	}
 
 	@Transactional

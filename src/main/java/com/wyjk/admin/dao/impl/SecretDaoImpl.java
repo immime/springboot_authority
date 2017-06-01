@@ -36,10 +36,10 @@ public class SecretDaoImpl implements ISecretDao {
 		pageNumber = pageNumber == null ? 1 : pageNumber;
 		pageSize = pageSize == null ? 10 : pageSize;
     	
-    	StringBuffer querySql = new StringBuffer("SELECT t.id, t.title, t.content FROM knowledge t left join knowledge_category c ON c.id = t.category_id");
-    	StringBuffer countSql = new StringBuffer("SELECT count(t.id) from knowledge t left join knowledge_category c ON c.id = t.category_id");
-    	StringBuffer where = new StringBuffer( " where c.id=2"); // 秘籍category_id=2
-    	StringBuffer order = new StringBuffer(" order by t.gmt_create DESC");
+    	StringBuffer querySql = new StringBuffer("SELECT t.id, t.title, t.content FROM knowledge t LEFT JOIN knowledge_category c ON c.id = t.category_id");
+    	StringBuffer countSql = new StringBuffer("SELECT count(t.id) FROM knowledge t LEFT JOIN knowledge_category c ON c.id = t.category_id");
+    	StringBuffer where = new StringBuffer( " WHERE t.status=1 AND c.id=2"); // 秘籍category_id=2
+    	StringBuffer order = new StringBuffer(" ORDER BY t.gmt_create DESC");
     	Map<String,Object> queryParams = new HashMap<>();
     	Map<String,Object> countParams = new HashMap<>();
     	//设置where查询条件 可选,注意前面空格

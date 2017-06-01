@@ -9,6 +9,8 @@ public interface IKnowledgeDao {
 	void update(Knowledge knowledge);
 
 	void delete(Integer id);
+	
+	void updateStatus(Integer id, Integer status);
 
 	Knowledge find(Integer id);
 	

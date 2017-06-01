@@ -17,9 +17,6 @@
     <link href="${ctx!}/assets/css/animate.css" rel="stylesheet">
     <link href="${ctx!}/assets/css/style.css?v=4.1.0" rel="stylesheet">
 	
-	<link href="${ctx!}/assets/js/plugins/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
-	<link href="${ctx!}/assets/js/plugins/bootstrap-fileinput/themes/explorer/theme.min.css" rel="stylesheet">
-	
 	<style>
 	  .dz-max-files-reached {
 	  	background-color: red
@@ -36,32 +33,25 @@
                         <h5>编辑须知</h5>
                     </div>
                     <div class="ibox-content">
-                        <form class="form-horizontal m-t" id="frm" method="post" action="${ctx!}/admin/banner/save">
-                        	<input type="hidden" id="id" name="id" value="${banner.id}">
+                        <form class="form-horizontal m-t" id="frm" method="post" action="${ctx!}/admin/secret/save">
+                        	<input type="hidden" id="id" name="id" value="${entity.id}">
                         	
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">图片:</label>
-                                <div class="col-sm-8">
-                                	<input type="hidden" id="iconUrl" name="iconUrl" value="${banner.iconUrl}">
-                                	<input id="fileInput" name="file" type="file" multiple class="file-loading" accept="image">
-                                </div>
-                            </div>
-							
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">跳转链接：</label>
-                                <div class="col-sm-8">
-                                    <input id="targetUrl" name="targetUrl" class="form-control" type="text" value="${banner.targetUrl}">
+                                <label class="col-sm-2 control-label">标题</label>
+                                <div class="col-sm-10">
+                                    <input id="title" name="title" class="form-control" type="text" value="${entity.title}">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">排序：</label>
-                                <div class="col-sm-8">
-                                    <input id="sortOrder" name="sortOrder" class="form-control" value="${banner.sortOrder}">
+                                <label class="col-sm-2 control-label">内容</label>
+                                <div class="col-sm-10">
+                                    <input type="hidden" name="content" >
+                                    <script id="content" type="text/plain" style="width:100%;height:500px;">${entity.content}</script>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-8 col-sm-offset-3">
-                                    <button class="btn btn-primary" type="submit">提交</button>
+                                <div class="col-sm-10 col-sm-offset-2">
+                                    <button id="btnSubmit" class="btn btn-primary" type="submit">提交</button>
                                     <button class="btn" type="button" onclick="javascript:history.go(-1);">返回</button>
                                 </div>
                             </div>
@@ -86,16 +76,18 @@
     <script src="${ctx!}/assets/js/plugins/validate/messages_zh.min.js"></script>
     <script src="${ctx!}/assets/js/plugins/layer/layer.min.js"></script>
     
-    <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/js/fileinput.min.js"></script>
-    <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/themes/explorer/theme.min.js"></script>
-    <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/js/locales/zh.js"></script>
+    <!-- ueditor -->
+    <script src="${ctx!}/assets/js/plugins/ueditor/ueditor.config.js"></script>
+    <script src="${ctx!}/assets/js/plugins/ueditor/ueditor.all.min.js"></script>
     
     <script type="text/javascript">
+    
+    var ue = UE.getEditor('content');
     
     var fileInputOptions = {
 		theme: "explorer",
 	    language : 'zh',
-	    uploadUrl: "/admin/file/uploadNoticeIcon",
+	    uploadUrl: "/admin/file/uploadPostImg",
 	    maxFileCount: 1,
 	    allowedFileExtensions: ['jpg', 'png', 'gif'],
 	    showBrowse: false,
@@ -108,50 +100,20 @@
     
     	var itemId = $("#id").val();
     	
-    	var iconUrl = $("#iconUrl").val();
-    	var dbIconUrl = "${fileDomain}" + $("#iconUrl").val();
-    	if (iconUrl) {
-    		var extOpitions = $.extend({
-	            initialPreview: [dbIconUrl]
-	        }, fileInputOptions);
-    	
-    		$("#fileInput").fileinput(extOpitions).on("filebatchselected", function(event, files) {
-	            $(this).fileinput("upload");
-	        }).on('fileuploaded', function(event, data) {
-	        	console.log(JSON.stringify(data));
-		        if(data.response) {
-	        		$("#iconUrl").val(data.response.data);
-	        	} else {
-	        		console.error("上传失败");
-	        	}
-		    });
-    	} else {
-	    	$("#fileInput").fileinput(fileInputOptions).on("filebatchselected", function(event, files) {
-	            $(this).fileinput("upload");
-	        }).on('fileuploaded', function(event, data) {
-	        	console.log(JSON.stringify(data));
-	        	if(data.response) {
-	        		$("#iconUrl").val(data.response.data);
-	        	} else {
-	        		console.error("上传失败");
-	        	}
-		    });
-    	}
-        
 	    $("#frm").validate({
     	    rules: {
-    	    	targetUrl: {
-    	        required: true,
-    	        minlength: 4,
-    	    	maxlength: 100
-    	      }
+    	    	title: {
+	    	    	required: true,
+	    	        minlength: 4,
+	    	    	maxlength: 100
+	    	    }
     	    },
     	    messages: {},
     	    submitHandler:function(form){
     	    	$.ajax({
    	    		   type: "POST",
    	    		   dataType: "json",
-   	    		   url: "${ctx!}/admin/banner/save",
+   	    		   url: "${ctx!}/admin/secret/save",
    	    		   data: $(form).serialize(),
    	    		   success: function(msg){
 	   	    			layer.msg(msg.message, {time: 2000},function(){
@@ -161,6 +123,12 @@
    	    		});
             } 
     	});
+    	
+    	$("#btnSubmit").click(function() {
+    		var content = ue.getContent();
+	    	$("input[name='content']").val(content);
+    	});
+    	
     });
     </script>
 

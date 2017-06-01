@@ -50,7 +50,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">标题</label>
                                 <div class="col-sm-10">
-                                    <input id="targetUrl" name="targetUrl" class="form-control" type="text" value="${entity.title}">
+                                    <input id="title" name="title" class="form-control" type="text" value="${entity.title}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -62,7 +62,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-3">
-                                    <button class="btn btn-primary" type="submit">提交</button>
+                                    <button id="btnSubmit" class="btn btn-primary" type="submit">提交</button>
                                     <button class="btn" type="button" onclick="javascript:history.go(-1);">返回</button>
                                 </div>
                             </div>
@@ -167,6 +167,12 @@
    	    		});
             } 
     	});
+    	
+    	$("#btnSubmit").click(function() {
+    		var content = ue.getContent();
+	    	$("input[name='content']").val(content);
+    	});
+    	
     });
     </script>
 

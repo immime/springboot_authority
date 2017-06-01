@@ -17,7 +17,7 @@ import com.wyjk.admin.service.ISecretService;
 import com.wyjk.admin.vo.SecretVO;
 
 @Controller
-@RequestMapping("/admin/secrect")
+@RequestMapping("/admin/secret")
 public class SecrectController extends BaseController {
 	
 	@Value("${app.upload.fileDomain}")
@@ -27,7 +27,7 @@ public class SecrectController extends BaseController {
 	
 	@RequestMapping(value = { "/", "/index" })
 	public String index() {
-		return "admin/content/secrect/index";
+		return "admin/content/secret/index";
 	}
 	
 	@RequestMapping(value = { "/list" })
@@ -42,7 +42,7 @@ public class SecrectController extends BaseController {
 	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap map) {
-		return "admin/content/secrect/form";
+		return "admin/content/secret/form";
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -50,7 +50,7 @@ public class SecrectController extends BaseController {
 		SecretVO entity = service.find(id);
 		map.put("entity", entity);
 		map.put("fileDomain", fileDomain);
-		return "admin/content/secrect/form";
+		return "admin/content/secret/form";
 	}
 	
 	@RequestMapping(value= {"/save"} ,method = RequestMethod.POST)
