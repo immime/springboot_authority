@@ -22,7 +22,7 @@ import com.wyjk.admin.common.ueditor.ActionEnter;
 @RequestMapping("/ueditor")
 public class UeditorController {
 
-	@Value(value = "classpath:conf/config.json")
+	@Value(value = "classpath:config.json")
 	private Resource config;
 	
 	@RequestMapping("/execute")

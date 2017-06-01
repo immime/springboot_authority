@@ -36,32 +36,31 @@
                         <h5>编辑须知</h5>
                     </div>
                     <div class="ibox-content">
-                        <form class="form-horizontal m-t" id="frm" method="post" action="${ctx!}/admin/notice/save">
-                        	<input type="hidden" id="id" name="id" value="${entity.id}">
+                        <form class="form-horizontal m-t" id="frm" method="post" action="${ctx!}/admin/banner/save">
+                        	<input type="hidden" id="id" name="id" value="${banner.id}">
                         	
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">图片</label>
-                                <div class="col-sm-10">
-                                	<input type="hidden" id="iconUrl" name="iconUrl" value="${entity.iconUrl}">
+                                <label class="col-sm-3 control-label">图片:</label>
+                                <div class="col-sm-8">
+                                	<input type="hidden" id="iconUrl" name="iconUrl" value="${banner.iconUrl}">
                                 	<input id="fileInput" name="file" type="file" multiple class="file-loading" accept="image">
                                 </div>
                             </div>
 							
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">标题</label>
-                                <div class="col-sm-10">
-                                    <input id="targetUrl" name="targetUrl" class="form-control" type="text" value="${entity.title}">
+                                <label class="col-sm-3 control-label">跳转链接：</label>
+                                <div class="col-sm-8">
+                                    <input id="targetUrl" name="targetUrl" class="form-control" type="text" value="${banner.targetUrl}">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">内容</label>
-                                <div class="col-sm-10">
-                                    <input type="hidden" name="content" >
-                                    <script id="content" type="text/plain" style="width:100%;height:500px;">${entity.content}</script>
+                                <label class="col-sm-3 control-label">排序：</label>
+                                <div class="col-sm-8">
+                                    <input id="sortOrder" name="sortOrder" class="form-control" value="${banner.sortOrder}">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-10 col-sm-offset-3">
+                                <div class="col-sm-8 col-sm-offset-3">
                                     <button class="btn btn-primary" type="submit">提交</button>
                                     <button class="btn" type="button" onclick="javascript:history.go(-1);">返回</button>
                                 </div>
@@ -90,13 +89,8 @@
     <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/js/fileinput.min.js"></script>
     <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/themes/explorer/theme.min.js"></script>
     <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/js/locales/zh.js"></script>
-    <!-- ueditor -->
-    <script src="${ctx!}/assets/js/plugins/ueditor/ueditor.config.js"></script>
-    <script src="${ctx!}/assets/js/plugins/ueditor/ueditor.all.min.js"></script>
     
     <script type="text/javascript">
-    
-    var ue = UE.getEditor('content');
     
     var fileInputOptions = {
 		theme: "explorer",
@@ -157,7 +151,7 @@
     	    	$.ajax({
    	    		   type: "POST",
    	    		   dataType: "json",
-   	    		   url: "${ctx!}/admin/notice/save",
+   	    		   url: "${ctx!}/admin/banner/save",
    	    		   data: $(form).serialize(),
    	    		   success: function(msg){
 	   	    			layer.msg(msg.message, {time: 2000},function(){

@@ -19,26 +19,26 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.wyjk.admin.common.pagination.PageResult;
-import com.wyjk.admin.dao.INoticeDao;
-import com.wyjk.admin.vo.NoticeVO;
+import com.wyjk.admin.dao.ISecretDao;
+import com.wyjk.admin.vo.SecretVO;
 
 @Repository
-public class NoticeDaoImpl implements INoticeDao {
+public class SecretDaoImpl implements ISecretDao {
 	
 	@PersistenceContext
 	private EntityManager em;
 	@Autowired
-    private JdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	public PageResult<NoticeVO> findAll(Integer pageNumber, Integer pageSize, String searchText) {
+	public PageResult<SecretVO> findAll(Integer pageNumber, Integer pageSize, String searchText) {
 		// 默认值
 		pageNumber = pageNumber == null ? 1 : pageNumber;
 		pageSize = pageSize == null ? 10 : pageSize;
     	
-    	StringBuffer querySql = new StringBuffer("SELECT t.id, t.title, t.icon_url, t.content FROM knowledge t left join knowledge_category c ON c.id = t.category_id");
+    	StringBuffer querySql = new StringBuffer("SELECT t.id, t.title, t.content FROM knowledge t left join knowledge_category c ON c.id = t.category_id");
     	StringBuffer countSql = new StringBuffer("SELECT count(t.id) from knowledge t left join knowledge_category c ON c.id = t.category_id");
-    	StringBuffer where = new StringBuffer( " where c.id=1");
+    	StringBuffer where = new StringBuffer( " where c.id=2"); // 秘籍category_id=2
     	StringBuffer order = new StringBuffer(" order by t.gmt_create DESC");
     	Map<String,Object> queryParams = new HashMap<>();
     	Map<String,Object> countParams = new HashMap<>();
@@ -59,22 +59,21 @@ public class NoticeDaoImpl implements INoticeDao {
 		
 		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(jdbcTemplate);
     	
-    	List<NoticeVO> list = jdbc.query(querySql.toString(), queryParams, new RowMapper<NoticeVO>() {
+    	List<SecretVO> list = jdbc.query(querySql.toString(), queryParams, new RowMapper<SecretVO>() {
 
 			@Override
-			public NoticeVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-				NoticeVO vo = new NoticeVO();
+			public SecretVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+				SecretVO vo = new SecretVO();
 				vo.setId(rs.getInt("id"));
 				vo.setTitle(rs.getString("title"));
 				vo.setContent(rs.getString("content"));
-				vo.setIconUrl(rs.getString("icon_url"));
 				return vo;
 			}
 		});
     	int totalCount = jdbc.queryForObject(countSql.toString(), countParams, Integer.class);
 		
     	// 分页封装
-		PageResult<NoticeVO> page = new PageResult<NoticeVO>();
+		PageResult<SecretVO> page = new PageResult<>();
 		page.pageNumber = pageNumber;
 		page.pageSize = pageSize;
 		page.total = totalCount;
@@ -84,25 +83,25 @@ public class NoticeDaoImpl implements INoticeDao {
     	
 		return page;
 	}
-
+	
 	@Override
-	public NoticeVO find(Integer id) {
-		String sql = "SELECT t.id, t.title, t.icon_url, t.content FROM knowledge t WHERE t.id = ?";
-		return jdbcTemplate.query(sql, new ResultSetExtractor<NoticeVO>() {
+	public SecretVO find(Integer id) {
+		String sql = "SELECT t.id, t.title, t.content FROM knowledge t where t.id = ?";
+		return jdbcTemplate.query(sql, new ResultSetExtractor<SecretVO>() {
 
 			@Override
-			public NoticeVO extractData(ResultSet rs) throws SQLException, DataAccessException {
+			public SecretVO extractData(ResultSet rs) throws SQLException, DataAccessException {
 				while(rs.next()) {
-					NoticeVO vo = new NoticeVO();
+					SecretVO vo = new SecretVO();
 					vo.setId(rs.getInt("id"));
 					vo.setTitle(rs.getString("title"));
 					vo.setContent(rs.getString("content"));
-					vo.setIconUrl(rs.getString("icon_url"));
 					return vo;
 				}
 				return null;
 			}
 		}, new Object[] { id });
 	}
-
+	
+	
 }

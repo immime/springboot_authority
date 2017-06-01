@@ -92,7 +92,7 @@
                          </@shiro.hasPermission>
                          <@shiro.hasPermission name="system:role:index">
                             <li>
-                                <a class="J_menuItem" href="${ctx!}/admin/role/index">科目1&4列表</a>
+                                <a class="J_menuItem" href="${ctx!}/admin/secret/index">秘籍管理</a>
                             </li>
                          </@shiro.hasPermission>
                          <@shiro.hasPermission name="system:resource:index">

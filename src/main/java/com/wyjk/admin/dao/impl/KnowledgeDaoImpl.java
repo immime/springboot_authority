@@ -32,4 +32,9 @@ public class KnowledgeDaoImpl implements IKnowledgeDao {
 		}
 	}
 
+	@Override
+	public Knowledge find(Integer id) {
+		return em.find(Knowledge.class, id);
+	}
+
 }

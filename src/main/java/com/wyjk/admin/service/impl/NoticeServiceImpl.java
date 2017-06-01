@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wyjk.admin.common.pagination.PageResult;
 import com.wyjk.admin.dao.IKnowledgeDao;
 import com.wyjk.admin.dao.INoticeDao;
+import com.wyjk.admin.entity.Banner;
+import com.wyjk.admin.entity.Knowledge;
 import com.wyjk.admin.service.INoticeService;
 import com.wyjk.admin.vo.NoticeVO;
 
@@ -31,8 +33,20 @@ public class NoticeServiceImpl implements INoticeService {
 	@Transactional
 	@Override
 	public void saveOrUpdate(NoticeVO entity) {
-		// TODO Auto-generated method stub
-		
+		Integer id = entity.getId();
+		if (id != null) {
+			Knowledge db = knowledgeDao.find(id);
+			db.setContent(entity.getContent());
+			db.setIconUrl(entity.getIconUrl());
+			db.setTitle(entity.getTitle());
+			knowledgeDao.update(db);
+		} else {
+			Knowledge knowledge = new Knowledge();
+			knowledge.setContent(entity.getContent());
+			knowledge.setIconUrl(entity.getIconUrl());
+			knowledge.setTitle(entity.getTitle());
+			knowledgeDao.add(knowledge);
+		}
 	}
 
 	@Transactional
