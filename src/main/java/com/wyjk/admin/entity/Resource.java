@@ -24,7 +24,7 @@ import com.wyjk.admin.entity.support.BaseEntity;
  * @since 2016-12-28
  */
 @Entity
-@Table(name = "tb_resource")
+@Table(name = "sys_resource")
 public class Resource extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;

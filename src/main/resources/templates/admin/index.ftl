@@ -79,7 +79,7 @@
                     
                     <li>
                         <a href="#">
-                            <i class="fa fa fa-cog"></i>
+                            <i class="fa fa fa-book"></i>
                             <span class="nav-label">文案管理</span>
                             <span class="fa arrow"></span>
                         </a>
@@ -96,12 +96,12 @@
                          </@shiro.hasPermission>
                          <@shiro.hasPermission name="system:resource:index">
                             <li>
-                                <a class="J_menuItem" href="${ctx!}/admin/resource/index">科目2列表</a>
+                                <a class="J_menuItem" href="${ctx!}/admin/kemu2/index">科目2文案</a>
                             </li>
                          </@shiro.hasPermission>
                          <@shiro.hasPermission name="system:resource:index">
                             <li>
-                                <a class="J_menuItem" href="${ctx!}/admin/resource/index">科目3列表</a>
+                                <a class="J_menuItem" href="${ctx!}/admin/kemu3/index">科目3文案</a>
                             </li>
                          </@shiro.hasPermission>
                         </ul>
@@ -110,13 +110,31 @@
                     <@shiro.hasPermission name="banner:index">
                     <li>
                         <a href="#">
-                            <i class="fa fa fa-cog"></i>
+                            <i class="fa fa fa-photo"></i>
                             <span class="nav-label">Banner管理</span>
                             <span class="fa arrow"></span>
                         </a>
                         <ul class="nav nav-second-level">
                             <li>
                                <a class="J_menuItem" href="${ctx!}/admin/banner/index">Banner列表</a>
+                            </li>
+                        </ul>
+                    </li>
+                    </@shiro.hasPermission>
+                    
+                    <@shiro.hasPermission name="banner:index">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa fa-user"></i>
+                            <span class="nav-label">用户相关</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                               <a class="J_menuItem" href="${ctx!}/admin/account/index">用户列表</a>
+                            </li>
+                            <li>
+                               <a class="J_menuItem" href="${ctx!}/admin/feedback/index">反馈列表</a>
                             </li>
                         </ul>
                     </li>
@@ -136,14 +154,14 @@
                     <ul class="nav navbar-top-links navbar-right">
                         <li class="dropdown">
                             <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                                <i class="fa fa-user"></i> <span class="label label-primary"></span>【<@shiro.principal type="com.wyjk.admin.entity.User" property="nickName"/>】
+                                <i class="fa fa-user"></i> <span class="label label-primary"></span>【<@shiro.principal type="com.wyjk.admin.entity.Admin" property="nickName"/>】
                             </a>
                             <ul class="dropdown-menu dropdown-alerts">
                                 <li>
                                     <a href="${ctx!}/admin/logout">
                                         <div>
                                             <i class="fa fa-remove"></i> 注销
-                                            <span class="pull-right text-muted small"><@shiro.principal type="com.wyjk.admin.entity.User" property="userName"/></span>
+                                            <span class="pull-right text-muted small"><@shiro.principal type="com.wyjk.admin.entity.Admin" property="userName"/></span>
                                         </div>
                                     </a>
                                 </li>

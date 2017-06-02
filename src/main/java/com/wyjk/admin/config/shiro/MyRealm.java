@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
 import com.wyjk.admin.common.utils.MD5Utils;
 import com.wyjk.admin.entity.Resource;
 import com.wyjk.admin.entity.Role;
-import com.wyjk.admin.entity.User;
-import com.wyjk.admin.service.IUserService;
+import com.wyjk.admin.entity.Admin;
+import com.wyjk.admin.service.IAdminService;
 
 /**
  * 
@@ -42,14 +42,14 @@ public class MyRealm extends AuthorizingRealm {
 	}
 	
 	@Autowired
-	private IUserService userService;
+	private IAdminService userService;
 
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(
 			PrincipalCollection principals) {
-		User user = (User) principals.getPrimaryPrincipal();
+		Admin user = (Admin) principals.getPrimaryPrincipal();
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-		User dbUser = userService.findByUserName(user.getUserName());
+		Admin dbUser = userService.findByUserName(user.getUserName());
 		Set<String> shiroPermissions = new HashSet<>();
 		Set<String> roleSet = new HashSet<String>();
 		Set<Role> roles = dbUser.getRoles();
@@ -71,7 +71,7 @@ public class MyRealm extends AuthorizingRealm {
 			AuthenticationToken token) throws AuthenticationException {
 		String username = (String) token.getPrincipal();
 		
-		User user = userService.findByUserName(username);
+		Admin user = userService.findByUserName(username);
 		
 		String password = new String((char[]) token.getCredentials());
 

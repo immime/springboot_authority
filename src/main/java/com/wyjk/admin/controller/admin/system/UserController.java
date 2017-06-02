@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wyjk.admin.common.JsonResult;
 import com.wyjk.admin.controller.BaseController;
 import com.wyjk.admin.entity.Role;
-import com.wyjk.admin.entity.User;
+import com.wyjk.admin.entity.Admin;
 import com.wyjk.admin.service.IRoleService;
-import com.wyjk.admin.service.IUserService;
+import com.wyjk.admin.service.IAdminService;
 import com.wyjk.admin.service.specification.SimpleSpecificationBuilder;
 import com.wyjk.admin.service.specification.SpecificationOperator.Operator;
 
@@ -28,7 +28,7 @@ import com.wyjk.admin.service.specification.SpecificationOperator.Operator;
 public class UserController extends BaseController {
 
 	@Autowired
-	private IUserService userService;
+	private IAdminService userService;
 	@Autowired
 	private IRoleService roleService;
 
@@ -39,13 +39,13 @@ public class UserController extends BaseController {
 
 	@RequestMapping(value = { "/list" })
 	@ResponseBody
-	public Page<User> list() {
-		SimpleSpecificationBuilder<User> builder = new SimpleSpecificationBuilder<User>();
+	public Page<Admin> list() {
+		SimpleSpecificationBuilder<Admin> builder = new SimpleSpecificationBuilder<Admin>();
 		String searchText = request.getParameter("searchText");
 		if(StringUtils.isNotBlank(searchText)){
 			builder.add("nickName", Operator.likeAll.name(), searchText);
 		}
-		Page<User> page = userService.findAll(builder.generateSpecification(), getPageRequest());
+		Page<Admin> page = userService.findAll(builder.generateSpecification(), getPageRequest());
 		return page;
 	}
 	
@@ -56,14 +56,14 @@ public class UserController extends BaseController {
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String edit(@PathVariable Integer id,ModelMap map) {
-		User user = userService.find(id);
+		Admin user = userService.find(id);
 		map.put("user", user);
 		return "admin/user/form";
 	}
 	
 	@RequestMapping(value= {"/edit"} ,method = RequestMethod.POST)
 	@ResponseBody
-	public JsonResult edit(User user,ModelMap map){
+	public JsonResult edit(Admin user,ModelMap map){
 		try {
 			userService.saveOrUpdate(user);
 		} catch (Exception e) {
@@ -86,7 +86,7 @@ public class UserController extends BaseController {
 	
 	@RequestMapping(value = "/grant/{id}", method = RequestMethod.GET)
 	public String grant(@PathVariable Integer id, ModelMap map) {
-		User user = userService.find(id);
+		Admin user = userService.find(id);
 		map.put("user", user);
 		
 		Set<Role> set = user.getRoles();

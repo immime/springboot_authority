@@ -26,8 +26,8 @@ import com.wyjk.admin.entity.support.BaseEntity;
  * @since 2016-12-28
  */
 @Entity
-@Table(name = "tb_user")
-public class User extends BaseEntity {
+@Table(name = "sys_admin")
+public class Admin extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -110,7 +110,7 @@ public class User extends BaseEntity {
 	private Date updateTime;
 
 	@ManyToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.LAZY)
-	@JoinTable(name = "tb_user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
+	@JoinTable(name = "sys_admin_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
 	private java.util.Set<Role> roles;
 
 	public Integer getId() {

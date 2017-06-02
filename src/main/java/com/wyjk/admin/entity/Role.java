@@ -26,7 +26,7 @@ import com.wyjk.admin.entity.support.BaseEntity;
  * @since 2016-12-28
  */
 @Entity
-@Table(name = "tb_role")
+@Table(name = "sys_role")
 public class Role extends BaseEntity {
 
 	/**
@@ -75,7 +75,7 @@ public class Role extends BaseEntity {
 	private Date updateTime;
 
 	@ManyToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.LAZY)
-	@JoinTable(name = "tb_role_resource", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = { @JoinColumn(name = "resource_id") })
+	@JoinTable(name = "sys_role_resource", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = { @JoinColumn(name = "resource_id") })
 	private java.util.Set<Resource> resources;
 
 	public Integer getId() {

@@ -16,7 +16,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
 import com.wyjk.admin.common.DateEditor;
-import com.wyjk.admin.service.IUserService;
+import com.wyjk.admin.service.IAdminService;
 
 public class BaseController {
 	@Autowired
@@ -26,7 +26,7 @@ public class BaseController {
 	protected HttpServletResponse response;
 	
 	@Autowired
-	private IUserService userService;
+	private IAdminService userService;
 	
 	@InitBinder
     protected void initBinder(WebDataBinder webDataBinder) {

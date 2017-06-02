@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.wyjk.admin.common.utils.MD5Utils;
-import com.wyjk.admin.dao.IUserDao;
+import com.wyjk.admin.dao.IAdminDao;
 import com.wyjk.admin.dao.support.IBaseDao;
 import com.wyjk.admin.entity.Role;
-import com.wyjk.admin.entity.User;
+import com.wyjk.admin.entity.Admin;
 import com.wyjk.admin.service.IRoleService;
-import com.wyjk.admin.service.IUserService;
+import com.wyjk.admin.service.IAdminService;
 import com.wyjk.admin.service.support.impl.BaseServiceImpl;
 
 /**
@@ -26,28 +26,28 @@ import com.wyjk.admin.service.support.impl.BaseServiceImpl;
  * @since 2016-12-28
  */
 @Service
-public class UserServiceImpl extends BaseServiceImpl<User, Integer> implements IUserService {
+public class AdminServiceImpl extends BaseServiceImpl<Admin, Integer> implements IAdminService {
 
 	@Autowired
-	private IUserDao userDao;
+	private IAdminDao userDao;
 	
 	@Autowired
 	private IRoleService roleService;
 	
 	@Override
-	public IBaseDao<User, Integer> getBaseDao() {
+	public IBaseDao<Admin, Integer> getBaseDao() {
 		return this.userDao;
 	}
 
 	@Override
-	public User findByUserName(String username) {
+	public Admin findByUserName(String username) {
 		return userDao.findByUserName(username);
 	}
 
 	@Override
-	public void saveOrUpdate(User user) {
+	public void saveOrUpdate(Admin user) {
 		if(user.getId() != null){
-			User dbUser = find(user.getId());
+			Admin dbUser = find(user.getId());
 			dbUser.setNickName(user.getNickName());
 			dbUser.setSex(user.getSex());
 			dbUser.setBirthday(user.getBirthday());
@@ -71,14 +71,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, Integer> implements I
 
 	@Override
 	public void delete(Integer id) {
-		User user = find(id);
+		Admin user = find(id);
 		Assert.state(!"admin".equals(user.getUserName()),"超级管理员用户不能删除");
 		super.delete(id);
 	}
 
 	@Override
 	public void grant(Integer id, String[] roleIds) {
-		User user = find(id);
+		Admin user = find(id);
 		Assert.notNull(user, "用户不存在");
 		Assert.state(!"admin".equals(user.getUserName()),"超级管理员用户不能修改管理角色");
 		Role role;

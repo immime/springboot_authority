@@ -16,15 +16,9 @@
     <link href="${ctx!}/assets/css/font-awesome.css?v=4.4.0" rel="stylesheet">
     <link href="${ctx!}/assets/css/animate.css" rel="stylesheet">
     <link href="${ctx!}/assets/css/style.css?v=4.1.0" rel="stylesheet">
-	
 	<link href="${ctx!}/assets/js/plugins/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
 	<link href="${ctx!}/assets/js/plugins/bootstrap-fileinput/themes/explorer/theme.min.css" rel="stylesheet">
 	
-	<style>
-	  .dz-max-files-reached {
-	  	background-color: red
-	  };
-	</style>
 </head>
 
 <body class="gray-bg">
@@ -36,21 +30,26 @@
                         <h5>编辑须知</h5>
                     </div>
                     <div class="ibox-content">
-                        <form class="form-horizontal m-t" id="frm" method="post" action="${ctx!}/admin/notice/save">
+                        <form class="form-horizontal m-t" id="frm" method="post" action="${ctx!}/admin/kemu3/save">
                         	<input type="hidden" id="id" name="id" value="${entity.id}">
                         	
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">图片</label>
-                                <div class="col-sm-10">
-                                	<input type="hidden" id="iconUrl" name="iconUrl" value="${entity.iconUrl}">
-                                	<input id="fileInput" name="file" type="file" multiple class="file-loading" accept="image">
-                                </div>
-                            </div>
-							
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">标题</label>
                                 <div class="col-sm-10">
                                     <input id="title" name="title" class="form-control" type="text" value="${entity.title}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">摘要</label>
+                                <div class="col-sm-10">
+                                    <input id="title" name="description" class="form-control" type="text" value="${entity.description}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">图片</label>
+                                <div class="col-sm-10">
+                                	<input type="hidden" id="thumbUrl" name="thumbUrl" value="${entity.thumbUrl}">
+                                	<input id="fileInput" name="file" type="file" multiple class="file-loading" accept="image">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -86,7 +85,7 @@
     <script src="${ctx!}/assets/js/plugins/validate/jquery.validate.min.js"></script>
     <script src="${ctx!}/assets/js/plugins/validate/messages_zh.min.js"></script>
     <script src="${ctx!}/assets/js/plugins/layer/layer.min.js"></script>
-    
+    <!-- fileinput -->
     <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/js/fileinput.min.js"></script>
     <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/themes/explorer/theme.min.js"></script>
     <script src="${ctx!}/assets/js/plugins/bootstrap-fileinput/js/locales/zh.js"></script>
@@ -101,7 +100,7 @@
     var fileInputOptions = {
 		theme: "explorer",
 	    language : 'zh',
-	    uploadUrl: "/admin/file/uploadNoticeIcon",
+	    uploadUrl: "/admin/file/uploadPostImg",
 	    maxFileCount: 1,
 	    allowedFileExtensions: ['jpg', 'png', 'gif'],
 	    showBrowse: false,
@@ -114,9 +113,9 @@
     
     	var itemId = $("#id").val();
     	
-    	var iconUrl = $("#iconUrl").val();
-    	var dbIconUrl = "${fileDomain}" + $("#iconUrl").val();
-    	if (iconUrl) {
+    	var thumbUrl = $("#thumbUrl").val();
+    	var dbIconUrl = "${fileDomain}" + $("#thumbUrl").val();
+    	if (thumbUrl) {
     		var extOpitions = $.extend({
 	            initialPreview: [dbIconUrl]
 	        }, fileInputOptions);
@@ -126,7 +125,7 @@
 	        }).on('fileuploaded', function(event, data) {
 	        	console.log(JSON.stringify(data));
 		        if(data.response) {
-	        		$("#iconUrl").val(data.response.data);
+	        		$("#thumbUrl").val(data.response.data);
 	        	} else {
 	        		console.error("上传失败");
 	        	}
@@ -137,27 +136,27 @@
 	        }).on('fileuploaded', function(event, data) {
 	        	console.log(JSON.stringify(data));
 	        	if(data.response) {
-	        		$("#iconUrl").val(data.response.data);
+	        		$("#thumbUrl").val(data.response.data);
 	        	} else {
 	        		console.error("上传失败");
 	        	}
 		    });
     	}
-        
+    	
 	    $("#frm").validate({
     	    rules: {
-    	    	targetUrl: {
-    	        required: true,
-    	        minlength: 4,
-    	    	maxlength: 100
-    	      }
+    	    	title: {
+	    	    	required: true,
+	    	        minlength: 4,
+	    	    	maxlength: 100
+	    	    }
     	    },
     	    messages: {},
     	    submitHandler:function(form){
     	    	$.ajax({
    	    		   type: "POST",
    	    		   dataType: "json",
-   	    		   url: "${ctx!}/admin/notice/save",
+   	    		   url: "${ctx!}/admin/kemu3/save",
    	    		   data: $(form).serialize(),
    	    		   success: function(msg){
 	   	    			layer.msg(msg.message, {time: 2000},function(){

@@ -9,20 +9,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.wyjk.admin.controller.BaseController;
-import com.wyjk.admin.entity.User;
-import com.wyjk.admin.service.IUserService;
+import com.wyjk.admin.entity.Admin;
+import com.wyjk.admin.service.IAdminService;
 
 @Controller
 public class IndexController extends BaseController{
 	
 	@Autowired
-	private IUserService userService;
+	private IAdminService userService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@RequestMapping(value={"/","/index"})
 	public String index(){
-		List<User> users = userService.findAll();
+		List<Admin> users = userService.findAll();
 		logger.debug(users.toString());
 		return "index";
 	}

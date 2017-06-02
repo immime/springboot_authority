@@ -1,6 +1,6 @@
 package com.wyjk.admin.service;
 
-import com.wyjk.admin.entity.User;
+import com.wyjk.admin.entity.Admin;
 import com.wyjk.admin.service.support.IBaseService;
 
 /**
@@ -11,20 +11,20 @@ import com.wyjk.admin.service.support.IBaseService;
  * @author SPPan
  * @since 2016-12-28
  */
-public interface IUserService extends IBaseService<User, Integer> {
+public interface IAdminService extends IBaseService<Admin, Integer> {
 
 	/**
 	 * 根据用户名查找用户
 	 * @param username
 	 * @return
 	 */
-	User findByUserName(String username);
+	Admin findByUserName(String username);
 
 	/**
 	 * 增加或者修改用户
 	 * @param user
 	 */
-	void saveOrUpdate(User user);
+	void saveOrUpdate(Admin user);
 
 	/**
 	 * 给用户分配角色
